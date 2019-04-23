@@ -10,7 +10,8 @@ nunjucks.configure('views', {
 })
 
 const checkMiddleware = (req, res, next) => {
-  if (!req.query.age) {
+  const { age } = req.query
+  if (!age || isNaN(age)) {
     return res.redirect('/')
   }
 
@@ -25,22 +26,20 @@ app.get('/', (req, res) => {
 })
 
 app.post('/check', (req, res) => {
-  const age = req.body.age
-  req.query.age = age
-  if (age >= 18) {
-    return res.redirect(`/major/?age=${age}`)
-  } else {
-    return res.redirect(`/minor/?age=${age}`)
-  }
+  const { age } = req.body
+
+  return age >= 18
+    ? res.redirect(`/major/?age=${age}`)
+    : res.redirect(`/minor/?age=${age}`)
 })
 
 app.get('/major', checkMiddleware, (req, res) => {
-  const age = req.query.age
+  const { age } = req.query
   return res.render('major', { age })
 })
 
 app.get('/minor', checkMiddleware, (req, res) => {
-  const age = req.query.age
+  const { age } = req.query
   return res.render('minor', { age })
 })
 
