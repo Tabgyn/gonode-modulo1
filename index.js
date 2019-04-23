@@ -11,7 +11,8 @@ nunjucks.configure('views', {
 
 const checkMiddleware = (req, res, next) => {
   const { age } = req.query
-  if (!age || isNaN(age)) {
+
+  if (!age || Number.isNaN(parseInt(age))) {
     return res.redirect('/')
   }
 
